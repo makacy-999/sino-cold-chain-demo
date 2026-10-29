@@ -455,7 +455,7 @@
               <div class="row"><span>客户名称</span><b>利来制药</b></div>
               <div class="row"><span>货物</span><b>替尔泊肽注射液（穆峰达）</b></div>
               <div class="row"><span>温控要求</span><b style="color:#0b5c8f">2℃ ~ 8℃ 全程冷链 <span class="pill-s cold">GSP 冷藏药品</span></b></div>
-              <div class="row"><span>数量</span><b>30 箱 / 3 托盘</b></div>
+              <div class="row"><span>数量</span><b>42 箱 · 冷藏箱 480×400×300</b></div>
               <div class="row"><span>起运 → 目的地</span><b>北京大兴物流园 → 天津滨海新区</b></div>
               <div class="row"><span>要求送达</span><b>今日 18:00 前</b></div>
               <div class="row"><span>交付方式</span><b>整车直送 · 带温度记录仪</b></div>
@@ -532,11 +532,12 @@
             <ul class="kv">
               <li><span>排布方式</span><b id="arrange">—</b></li>
               <li><span>托盘规格</span><b id="pdim">1200×1000×1100</b></li>
+              <li><span>每托装箱</span><b id="pper">—</b></li>
               <li><span>货物体积</span><b id="vol">0.0 m³</b></li>
               <li><span>空间占用率</span><b id="rate">0%</b></li>
               <li><span>剩余可拼载</span><b id="rest">—</b></li>
             </ul>
-            <div class="log" id="log3" style="max-height:104px"><div><span class="t">10:22:10</span>调用装箱算法 · 约束：不可倒置 / 按规格堆叠 / 预留冷气回风道</div></div>
+            <div class="log" id="log3" style="max-height:104px"><div><span class="t">10:22:10</span>调用装箱算法 · 整单 42 箱（480×400×300）· 按托盘规格计算每托箱数</div></div>
             <button class="btn btn-primary btn-sm" data-go="3" style="width:100%;justify-content:center">派车 →</button>
           </aside>
         </div>
@@ -710,7 +711,7 @@
         </div>
       </section>
 
-      <p class="note">说明：装载模型按车辆「有效装载尺寸」7380×2340×2220 mm 建模，托盘规格可选 4 种（默认 1200×1000×1100 mm，含 150 mm 木托），算法在长宽两种朝向中择优排布；订单、车辆与温控数据用于流程演示，实际以业务系统与货物参数为准。</p>
+      <p class="note">说明：装载模型按车辆「有效装载尺寸」7380×2340×2220 mm 建模；订单 42 箱（冷藏箱 480×400×300），每托箱数按所选托盘规格与箱规自动计算（本单 2~7 托），算法在长宽两种朝向中择优排布；订单、车辆与温控数据用于流程演示，实际以业务系统与货物参数为准。</p>
     </div>
   </section>
 
@@ -827,7 +828,7 @@
     b.addEventListener('click', function () {
       var n = parseInt(b.dataset.go, 10);
       if (n === 1) logTo('log2', '10:21:18', '订单要素解析完成 · 进入合规校验');
-      if (n === 2) logTo('log3', '10:22:05', '装载方案生成 · 本单 ' + Math.min(3, layout.max) + ' 托 / 满载 ' + layout.max + ' 托');
+      if (n === 2) logTo('log3', '10:22:05', '装载方案生成 · 42 箱 · 每托 ' + perPalletBoxes(PRESETS[pIdx]).per + ' 箱 → 本单 ' + orderPallets() + ' 托 / 满载 ' + layout.max + ' 托');
       if (n === 3) logTo('log4', '10:23:12', '派车结果：京A·OR253 · 匹配分 96');
       if (n === 4) logTo('log5', '10:32:00', '车辆出发 · GPS 轨迹开始回传');
       stopAll(); goStep(n);
@@ -1032,6 +1033,18 @@
   var T_IN = 640, T_LIFT = 260, ENTRY = -1780;
   var pals = [], total = 3, curT = 0, playing = false, rafId = null, totalTime = 0, currentLoad = 3;
 
+  /* 订单货量固定：42 箱，冷藏箱 480×400×300（单箱 0.0576 m³），托数按托盘规格自动计算 */
+  var ORDER = { boxes: 42, bw: 480, bl: 400, bh: 300 };
+  function perPalletBoxes(spec) {
+    var usefH = spec.ph - 150; /* 扣除 150mm 木托后的可用堆码高度 */
+    var h = Math.max(1, Math.floor(usefH / ORDER.bh));
+    var a = Math.max(1, Math.floor(spec.pl / ORDER.bl)) * Math.max(1, Math.floor(spec.pw / ORDER.bw));
+    var b = Math.max(1, Math.floor(spec.pl / ORDER.bw)) * Math.max(1, Math.floor(spec.pw / ORDER.bl));
+    var perLayer = Math.max(a, b);
+    return { per: perLayer * h, layers: h, perLayer: perLayer };
+  }
+  function orderPallets() { return Math.ceil(ORDER.boxes / perPalletBoxes(PRESETS[pIdx]).per); }
+
   function computeLayout(spec) {
     var cands = [[spec.pw, spec.pl], [spec.pl, spec.pw]], best = null;
     for (var i = 0; i < cands.length; i++) {
@@ -1082,15 +1095,19 @@
     var arrTxt = colUsed + ' 列 × ' + rowUsed + ' 排 × ' + layUsed + ' 层';
     if (total >= layout.max) arrTxt = layout.cols + ' 列 × ' + layout.rows + ' 排 × ' + layout.layers + ' 层 · 满载';
     document.getElementById('arrange').textContent = arrTxt;
-    var vol = total * SP.pw * SP.pl * SP.ph / 1e9;
+    document.getElementById('rest').textContent = (layout.max - total) + ' 托';
+    document.getElementById('pdim').textContent = SP.pl + '×' + SP.pw + '×' + SP.ph;
+    var pp = perPalletBoxes(PRESETS[pIdx]);
+    document.getElementById('pper').textContent = pp.per + ' 箱/托';
+    var vol;
+    if (loadMode === 'order') vol = ORDER.boxes * ORDER.bw * ORDER.bl * ORDER.bh / 1e9;
+    else vol = total * SP.pw * SP.pl * SP.ph / 1e9;
     document.getElementById('vol').textContent = vol.toFixed(2) + ' m³';
     var effVol = EFF.W * EFF.L * EFF.H / 1e9;
     document.getElementById('rate').textContent = (vol / effVol * 100).toFixed(1) + '%';
-    document.getElementById('rest').textContent = (layout.max - total) + ' 托';
-    document.getElementById('pdim').textContent = SP.pl + '×' + SP.pw + '×' + SP.ph;
     // 同步「装载口径」按钮文案与选中态
     var seg = document.getElementById('segLoad');
-    seg.children[0].textContent = '本单 3 托';
+    seg.children[0].textContent = '本单 ' + total + ' 托';
     seg.children[1].textContent = '整车 ' + maxN + ' 托';
     for (var s = 0; s < seg.children.length; s++) {
       seg.children[s].classList.toggle('on', seg.children[s].dataset.mode === loadMode);
@@ -1157,9 +1174,12 @@
     var mode = b.dataset.mode;
     if (mode === loadMode) return;
     loadMode = mode;
-    var n = (mode === 'full') ? computeLayout(PRESETS[pIdx]).max : 3;
+    var pp = perPalletBoxes(PRESETS[pIdx]);
+    var n = (mode === 'full') ? computeLayout(PRESETS[pIdx]).max : orderPallets();
     logTo('log3', '10:22:' + (mode === 'order' ? 26 : 34),
-      mode === 'order' ? '切换口径：本单 3 托（拼载优先）' : '切换口径：整车 ' + n + ' 托（满载核算）');
+      mode === 'order'
+        ? '切换口径：本单 42 箱 · 每托 ' + pp.per + ' 箱 → ' + n + ' 托（拼载优先）'
+        : '切换口径：整车 ' + n + ' 托（满载核算）');
     rebuild(n);
   });
 
@@ -1170,10 +1190,10 @@
     if (i === pIdx) return;
     pIdx = i;
     for (var k = 0; k < this.children.length; k++) this.children[k].classList.toggle('on', this.children[k] === b);
-    var p = PRESETS[i], maxN = computeLayout({ pw: p.pw, pl: p.pl, ph: p.ph }).max;
-    var n = (loadMode === 'full') ? maxN : Math.min(3, maxN);
+    var p = PRESETS[i], pp = perPalletBoxes(p), maxN = computeLayout(p).max;
+    var n = (loadMode === 'full') ? maxN : Math.ceil(ORDER.boxes / pp.per);
     logTo('log3', '10:22:' + (40 + i * 4),
-      '换托盘规格 ' + p.label + '（' + p.pl + '×' + p.pw + '×' + p.ph + '）· 整车最多 ' + maxN + ' 托');
+      '换托盘规格 ' + p.label + '（' + p.pl + '×' + p.pw + '×' + p.ph + '）· 每托 ' + pp.per + ' 箱 → 本单 ' + n + ' 托 · 整车最多 ' + maxN + ' 托');
     rebuild(n);
   });
 
@@ -1221,7 +1241,7 @@
       for (var z = 0; z < pbs.length; z++) pbs[z].classList.toggle('on', parseInt(pbs[z].dataset.i, 10) === pIdx);
     }
   }
-  rebuild((params.get('load') === '24' || params.get('load') === 'full') ? 9999 : 3);
+  rebuild((params.get('load') === '24' || params.get('load') === 'full') ? 9999 : orderPallets());
   playing = false;
   if (rafId) cancelAnimationFrame(rafId);
 
