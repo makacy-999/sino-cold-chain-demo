@@ -223,10 +223,10 @@
   .photo .cap span{color:var(--muted);font-size:11.5px;white-space:nowrap}
 
   /* CTA */
-  .cta{margin:52px 0 0;background:linear-gradient(120deg,#011c37 0%,#013E75 60%,#0a4f8f 100%);color:#fff;border-radius:26px;padding:34px 36px;display:flex;justify-content:space-between;align-items:center;gap:28px;flex-wrap:wrap;position:relative;overflow:hidden}
+  .cta{margin:52px 0 0;background:linear-gradient(120deg,#011c37 0%,#013E75 60%,#0a4f8f 100%);color:#fff;border-radius:26px;padding:30px 24px;display:flex;justify-content:space-between;align-items:center;gap:28px;flex-wrap:wrap;position:relative;overflow:hidden}
   .cta:after{content:"";position:absolute;right:-60px;top:-80px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(194,31,46,.45),rgba(194,31,46,0) 70%)}
   .cta h3{font-size:22px;margin-bottom:8px;position:relative}
-  .cta p{font-size:14px;color:#b9c8d8;max-width:40em;position:relative}
+  .cta p{font-size:15px;color:#b9c8d8;letter-spacing:-.045em;white-space:nowrap;max-width:none;position:relative}
   footer{padding:28px 0 44px;font-size:12px;color:#93a1b3;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
 
   .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
@@ -266,6 +266,10 @@
   @keyframes ping{0%{transform:scale(.55);opacity:.7}70%{transform:scale(1.7);opacity:0}100%{transform:scale(1.7);opacity:0}}
   #curDot .halo{transform-box:fill-box;transform-origin:center;animation:ping 2s ease-out infinite}
 
+  /* CTA 一句话单行放大版需要 ≥1181px 视口；更窄恢复两行 14px 防溢出 */
+  @media (max-width:1180px){
+    .cta p{white-space:normal;letter-spacing:0;font-size:14px;max-width:40em}
+  }
   @media (max-width:1040px){
     .p-body{grid-template-columns:1fr}
     .p-body.load3d{grid-template-columns:1fr}
