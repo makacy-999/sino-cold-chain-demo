@@ -1026,12 +1026,13 @@
     poly(gWalls, [P(0, 0, INNER.L), P(INNER.W, 0, INNER.L), P(INNER.W, INNER.H, INNER.L), P(0, INNER.H, INNER.L)], '#e9f0f7', { opacity: .96, stroke: '#c8d4e1', 'stroke-width': 1.4 });
     poly(gWalls, [P(760, 2160, 7380), P(1800, 2160, 7380), P(1800, 2160, 7560), P(760, 2160, 7560)], '#dde6ef', { stroke: '#bfcbda', 'stroke-width': 1.2 });
     poly(gWalls, [P(760, 2160, 7380), P(1800, 2160, 7380), P(1800, 2450, 7380), P(760, 2450, 7380)], '#cfdae6', { stroke: '#bfcbda', 'stroke-width': 1.2 });
-    poly(gWalls, [P(INNER.W, 0, 0), P(INNER.W, 0, INNER.L), P(INNER.W, INNER.H, INNER.L), P(INNER.W, INNER.H, 0)], '#eff6fc', { opacity: .32, stroke: '#aebfd1', 'stroke-width': 1.8 });
     for (var z2 = 160; z2 < INNER.L; z2 += 560) pline(gWalls, P(INNER.W, 30, z2), P(INNER.W, INNER.H - 30, z2), '#b9c8d8', 1.4, { opacity: .45 });
     el('polyline', { points: pts([P(0, INNER.H, 0), P(0, INNER.H, INNER.L), P(INNER.W, INNER.H, INNER.L), P(INNER.W, INNER.H, 0)]), fill: 'none', stroke: '#a9bacd', 'stroke-width': 1.8, opacity: .95 }, gWalls);
 
     /* 半透明车顶：画在托盘之后，制造「货物装在封闭厢体内」的透视纵深感 */
     poly(gRoof, [P(0, INNER.H, 0), P(INNER.W, INNER.H, 0), P(INNER.W, INNER.H, INNER.L), P(0, INNER.H, INNER.L)], '#dfe9f3', { 'fill-opacity': .3, stroke: '#b9c8d8', 'stroke-width': 1.4 });
+    /* 近侧墙同样式半透明覆盖，托盘右侧面透过侧墙可见 */
+    poly(gRoof, [P(INNER.W, 0, 0), P(INNER.W, 0, INNER.L), P(INNER.W, INNER.H, INNER.L), P(INNER.W, INNER.H, 0)], '#dfe9f3', { 'fill-opacity': .3, stroke: '#aebfd1', 'stroke-width': 1.8 });
 
     poly(gWalls, [P(0, 0, 0), P(INNER.W, 0, 0), P(INNER.W, 0, -70), P(0, 0, -70)], '#cfd9e4', { stroke: '#b8c5d3', 'stroke-width': 1.2 });
     el('polyline', { points: pts([P(0, 0, 0), P(0, INNER.H, 0), P(INNER.W, INNER.H, 0), P(INNER.W, 0, 0)]), fill: 'none', stroke: '#8e9eb0', 'stroke-width': 4, 'stroke-linejoin': 'round' }, gWalls);
