@@ -346,7 +346,7 @@
         <h1>一票冷链订单<br>从<em>下单</em>到<em>交付</em>的<em>运输效果演示</em></h1>
         <p class="lead">
           订单接入 → GSP 校验 → 装载计算 → 自动派车 → 在途温控 → 到货交付。
-          每一步都看得见数据：<b>105 km</b>、<b>2~8℃</b>、<b>7.6 米车厢装 24 托</b>。
+          每一步都看得见数据：<b>105 km</b>、<b>2~8℃</b>、<b>7.6 米车厢装 11 托</b>。
         </p>
         <div class="hero-cta">
           <a class="btn btn-primary" href="#flow">播放全流程 →</a>
@@ -355,7 +355,7 @@
         <div class="chips">
           <div class="chip-k"><b><i data-cnt="47.5" data-dec="1">47.5</i><small>m³</small></b><span>车厢内径容积</span></div>
           <div class="chip-k"><b><i data-cnt="38.3" data-dec="1">38.3</i><small>m³</small></b><span>有效装载容积</span></div>
-          <div class="chip-k"><b><i data-cnt="24" data-dec="0">24</i><small>托</small></b><span>整车装载量</span></div>
+          <div class="chip-k"><b><i data-cnt="11" data-dec="0">11</i><small>托</small></b><span>整车装载量</span></div>
         </div>
       </div>
 
@@ -499,7 +499,7 @@
       <section class="panel" data-step="2">
         <div class="p-head">
           <div class="num">3</div>
-          <div><h3>装载计算 · 托盘从车厢后门装入</h3><p>托盘规格可选，算法按朝向择优排布：先到最里排、再逐排向门口退；一层装满再叠上层</p></div>
+          <div><h3>装载计算 · 托盘从车厢后门装入</h3><p>按 1100×1100×1700 托盘自动计算：先到最里排、再逐排向门口退；一层装满再叠上层</p></div>
         </div>
         <div class="p-body load3d">
           <div class="p-main" style="padding:0">
@@ -518,15 +518,6 @@
               <div class="seg" id="segLoad">
                 <button class="on" data-mode="order">本单 10 托</button>
                 <button data-mode="full">整车 11 托</button>
-              </div>
-            </div>
-            <div>
-              <div class="side-lbl">托盘规格（长×宽×高 mm）</div>
-              <div class="pspec" id="pspec">
-                <button class="on" data-i="0"><b>1100×1100×1700</b><span>标准托 · 单层</span></button>
-                <button data-i="1"><b>1200×1000×700</b><span>矮托 · 三层</span></button>
-                <button data-i="2"><b>1200×800×1100</b><span>欧标托 · 双层</span></button>
-                <button data-i="3"><b>1200×1000×1400</b><span>高托 · 单层</span></button>
               </div>
             </div>
             <div>
@@ -551,7 +542,7 @@
       <section class="panel" data-step="3">
         <div class="p-head">
           <div class="num">4</div>
-          <div><h3>智能派车 · 多因子匹配</h3><p>按「温区匹配 40% + 验证状态 25% + 时效 20% + 成本 15%」打分，自动选最优车</p></div>
+          <div><h3>智能派车 · 多因子匹配</h3><p>按「温区匹配 50% + 司机线路经验 25% + 维保临界值 15% + 车龄 10%」打分，自动选最优车</p></div>
         </div>
         <div class="p-body">
           <div class="p-main">
@@ -562,7 +553,7 @@
                 <div class="spec">7.6 米冷藏车 · 38.3 m³<br>温区 2~8℃ · 验证合格 2026-03<br>司机 王师傅 · 空闲</div>
                 <div class="score"><b class="sc">0</b><span>/100 匹配分</span></div>
                 <div class="sbar"><i></i></div>
-                <div class="why">温区匹配 + 验证在效 + 10 托整车直送</div>
+                <div class="why">温区匹配 + 常跑苏州—上海线 + 10 托整车直送</div>
               </div>
               <div class="cand">
                 <span class="badge">已选定</span>
@@ -570,7 +561,7 @@
                 <div class="spec">7.6 米冷藏车 · 38.3 m³<br>温区 2~8℃ · 验证合格 2026-05<br>司机 李师傅 · 空闲</div>
                 <div class="score"><b class="sc">0</b><span>/100 匹配分</span></div>
                 <div class="sbar"><i></i></div>
-                <div class="why">车况更优，但距装货点 26 km，时效扣分</div>
+                <div class="why">车龄较新，但司机线路经验不足，扣分</div>
               </div>
               <div class="cand">
                 <span class="badge">已选定</span>
@@ -583,7 +574,7 @@
             </div>
           </div>
           <aside class="p-side">
-            <div class="log" id="log4"><div><span class="t">10:23:00</span>派车引擎启动 · 候选 3 台 · 因子权重 40/25/20/15</div></div>
+            <div class="log" id="log4"><div><span class="t">10:23:00</span>派车引擎启动 · 候选 3 台 · 因子权重 50/25/15/10</div></div>
             <button class="btn btn-primary btn-sm" data-go="4">确认派车 · 出库 →</button>
           </aside>
         </div>
@@ -737,7 +728,7 @@
         </div>
       </section>
 
-      <p class="note">说明：装载模型按车辆「有效装载尺寸」7380×2340×2220 mm 建模；订单 480 件（件规 400×270×250），每托件数按所选托盘规格自动计算（本单 10~27 托），算法在长宽两种朝向中择优排布；订单、车辆与温控数据用于流程演示，实际以业务系统与货物参数为准。</p>
+      <p class="note">说明：装载模型按车辆「有效装载尺寸」7380×2340×2220 mm 建模；订单 480 件（件规 400×270×250），按 1100×1100×1700 托盘计算每托 48 件，本单 10 托、整车满载 11 托；订单、车辆与温控数据用于流程演示，实际以业务系统与货物参数为准。</p>
     </div>
   </section>
 
@@ -931,7 +922,7 @@
     });
     setTimeout(function () {
       cands[0].classList.add('win');
-      logTo('log4', '10:23:08', '京A·OR253 得分 96 · 温区匹配 · 验证在效 · 距装货点最近', true);
+      logTo('log4', '10:23:08', '京A·OR253 得分 96 · 温区匹配 · 常跑沪线 · 维保临界值内', true);
       logTo('log4', '10:23:09', '京AFB889 淘汰：温区不符（-18℃ 深冷）且在途');
     }, 1500);
   }
@@ -1235,7 +1226,8 @@
     rebuild(n);
   });
 
-  document.getElementById('pspec').addEventListener('click', function (e) {
+  var pspecEl = document.getElementById('pspec');
+  if (pspecEl) pspecEl.addEventListener('click', function (e) {
     var b = e.target.closest('button');
     if (!b) return;
     var i = parseInt(b.dataset.i, 10);
