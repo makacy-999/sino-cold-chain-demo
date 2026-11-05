@@ -482,7 +482,7 @@
           <div class="p-main">
             <div class="cklist" id="cklist">
               <div class="ck"><div class="bx"></div><div><strong>客户资质与委托协议有效</strong><span class="sub">药品经营许可证 / 委托运输协议均在有效期内</span></div></div>
-              <div class="ck"><div class="bx"></div><div><strong>温区要求已确认（2~8℃）</strong><span class="sub">冷藏车验证报告有效：京A·OR253 验证合格 2026-03</span></div></div>
+              <div class="ck"><div class="bx"></div><div><strong>温区要求已确认（2~8℃）</strong><span class="sub">冷藏车验证报告有效：京AOR253 验证合格 2026-03</span></div></div>
               <div class="ck"><div class="bx"></div><div><strong>随货同行单 / 温度记录仪齐备</strong><span class="sub">GSP 要求：全程温度数据可追溯</span></div></div>
               <div class="ck"><div class="bx"></div><div><strong>时效可行：里程 105 km，预计 2.5 h</strong><span class="sub">含装卸与预冷时间，满足 18:00 前送达</span></div></div>
               <div class="ck"><div class="bx"></div><div><strong>车辆资源可用：7.6 米冷藏车 3 台在库</strong><span class="sub">进入装载计算环节</span></div></div>
@@ -549,7 +549,7 @@
             <div class="cands" id="cands">
               <div class="cand" data-win="1">
                 <span class="badge">已选定</span>
-                <h5>京A·OR253</h5>
+                <h5>京AOR253</h5>
                 <div class="spec">7.6 米冷藏车 · 38.3 m³<br>温区 2~8℃ · 验证合格 2026-03<br>司机 王师傅 · 空闲</div>
                 <div class="score"><b class="sc">0</b><span>/100 匹配分</span></div>
                 <div class="sbar"><i></i></div>
@@ -557,7 +557,7 @@
               </div>
               <div class="cand">
                 <span class="badge">已选定</span>
-                <h5>京A·WV703</h5>
+                <h5>京AWV703</h5>
                 <div class="spec">7.6 米冷藏车 · 38.3 m³<br>温区 2~8℃ · 验证合格 2026-05<br>司机 李师傅 · 空闲</div>
                 <div class="score"><b class="sc">0</b><span>/100 匹配分</span></div>
                 <div class="sbar"><i></i></div>
@@ -847,7 +847,7 @@
       var n = parseInt(b.dataset.go, 10);
       if (n === 1) logTo('log2', '10:21:18', '订单要素解析完成 · 进入合规校验');
       if (n === 2) logTo('log3', '10:22:05', '装载方案生成 · 480 件 · 每托 ' + perPalletBoxes(PRESETS[pIdx]).per + ' 件 → 本单 ' + orderPallets() + ' 托 / 满载 ' + layout.max + ' 托');
-      if (n === 3) logTo('log4', '10:23:12', '派车结果：京A·OR253 · 匹配分 96');
+      if (n === 3) logTo('log4', '10:23:12', '派车结果：京AOR253 · 匹配分 96');
       if (n === 4) logTo('log5', '10:32:00', '车辆出发 · GPS 轨迹开始回传');
       if (n === 5) logTo('log6', '13:00:00', '在途监控完成 · 全程温控达标 · 进入交付流程');
       stopAll(); goStep(n);
@@ -875,12 +875,12 @@
   });
 
   function stepDelay(prev) {
-    if (prev === 0) return 4200;
-    if (prev === 1) return 4600;
-    if (prev === 2) return 7200;
-    if (prev === 3) return 5200;
-    if (prev === 4) return 5800;
-    return 4000;
+    if (prev === 0) return 2800;
+    if (prev === 1) return 2800;
+    if (prev === 2) return 3000;
+    if (prev === 3) return 2800;
+    if (prev === 4) return 3000;
+    return 2800;
   }
 
   document.getElementById('restart').addEventListener('click', function () { stopAll(); goStep(0); });
@@ -922,7 +922,7 @@
     });
     setTimeout(function () {
       cands[0].classList.add('win');
-      logTo('log4', '10:23:08', '京A·OR253 得分 96 · 温区匹配 · 常跑沪线 · 维保临界值内', true);
+      logTo('log4', '10:23:08', '京AOR253 得分 96 · 温区匹配 · 常跑沪线 · 维保临界值内', true);
       logTo('log4', '10:23:09', '京AFB889 淘汰：温区不符（-18℃ 深冷）且在途');
     }, 1500);
   }
@@ -1070,7 +1070,7 @@
   ];
   var pIdx = 0, loadMode = 'order';
   var SP = { pw: PRESETS[0].pw, pl: PRESETS[0].pl, ph: PRESETS[0].ph, cap: PRESETS[0].cap };
-  var T_IN = 640, T_LIFT = 260, ENTRY = -1780;
+  var T_IN = 480, T_LIFT = 200, ENTRY = -1780;
   var pals = [], total = 3, curT = 0, playing = false, rafId = null, totalTime = 0, currentLoad = 3;
 
   /* 订单货量固定：480 件，件规 400×270×250（单件 0.027 m³），托数按托盘规格自动计算；
@@ -1107,6 +1107,10 @@
     }
     /* 实际业务上限：7.6 米车装 1100×1100 托盘几何可排 12 托，受门框/机组间隙限制实测只能装 11 托 */
     if (spec.cap && list.length > spec.cap) list = list.slice(0, spec.cap);
+    /* 末排仅剩 1 托时居中放置（如整车 11 托的第 11 托） */
+    if (list.length && list.length < best.cols * best.rows * best.layers && list.length % best.cols === 1) {
+      list[list.length - 1].x = x0 + (usedW - best.a) / 2;
+    }
     return { list: list, cols: best.cols, rows: best.rows, layers: best.layers, max: list.length };
   }
 
@@ -1123,7 +1127,7 @@
     pals = all.slice(0, limit);
     total = pals.length;
     gPallets.innerHTML = '';
-    var stagger = limit <= 4 ? 900 : 300;
+    var stagger = limit <= 4 ? 600 : 180;
     for (var i = 0; i < pals.length; i++) {
       pals[i].t0 = i * stagger;
       pals[i].g = makePallet(pals[i], i);
