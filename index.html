@@ -875,12 +875,12 @@
   });
 
   function stepDelay(prev) {
-    if (prev === 0) return 2800;
-    if (prev === 1) return 2800;
-    if (prev === 2) return 3000;
-    if (prev === 3) return 2800;
-    if (prev === 4) return 3000;
-    return 2800;
+    if (prev === 0) return 2400;
+    if (prev === 1) return 2400;
+    if (prev === 2) return 2500;
+    if (prev === 3) return 2400;
+    if (prev === 4) return 2500;
+    return 2400;
   }
 
   document.getElementById('restart').addEventListener('click', function () { stopAll(); goStep(0); });
@@ -897,7 +897,7 @@
         if (i === items.length - 1) {
           logTo('log2', '10:21:45', '5/5 全部通过 · 订单放行，进入装载计算', true);
         }
-      }, 320 + i * 480);
+      }, 320 + i * 400);
     });
   }
 
@@ -932,7 +932,7 @@
   function runTemp() {
     if (tempDone) return; tempDone = true;
     var line = document.getElementById('tempLine');
-    line.style.transition = 'stroke-dashoffset 2.4s linear';
+    line.style.transition = 'stroke-dashoffset 2s linear';
     setTimeout(function () { line.style.strokeDashoffset = 0; }, 80);
     var pts = [[46,91],[130,82],[214,71],[298,83],[382,89],[466,80],[550,88],[634,84]];
     var g = document.getElementById('tempDots');
@@ -942,17 +942,17 @@
         c.setAttribute('cx', p[0]); c.setAttribute('cy', p[1]); c.setAttribute('r', 3.2);
         c.setAttribute('fill', '#fff'); c.setAttribute('stroke', '#16a34a'); c.setAttribute('stroke-width', 2);
         g.appendChild(c);
-      }, 300 + i * 300);
+      }, 300 + i * 260);
     });
     var track = document.getElementById('trackLine');
     var mark = document.getElementById('truckMark');
     if (STILL) { track.setAttribute('stroke-dasharray', '378 1000'); mark.setAttribute('transform', 'translate(424,40)'); return; }
-    track.style.transition = 'stroke-dasharray 2.6s linear';
+    track.style.transition = 'stroke-dasharray 2.2s linear';
     setTimeout(function () { track.setAttribute('stroke-dasharray', '568 1000'); }, 80);
     var t0 = null;
     function move(ts) {
       if (!t0) t0 = ts;
-      var k = Math.min(1, (ts - t0) / 2600);
+      var k = Math.min(1, (ts - t0) / 2200);
       var x = 46 + 568 * k;
       mark.setAttribute('transform', 'translate(' + x + ',40)');
       if (k >= 1) { var te = document.getElementById('trackEnd'); if (te) te.setAttribute('stroke', '#013E75'); }
@@ -972,7 +972,7 @@
         el.classList.add('pass');
         logTo('log6', times[i], '交付节点完成 · ' + el.querySelector('strong').textContent);
         if (i === items.length - 1) logTo('log6', '13:05:36', '6 个节点全链路闭环 · 签收与温度数据已归档', true);
-      }, 320 + i * 520);
+      }, 320 + i * 460);
     });
   }
 
@@ -1070,7 +1070,7 @@
   ];
   var pIdx = 0, loadMode = 'order';
   var SP = { pw: PRESETS[0].pw, pl: PRESETS[0].pl, ph: PRESETS[0].ph, cap: PRESETS[0].cap };
-  var T_IN = 480, T_LIFT = 200, ENTRY = -1780;
+  var T_IN = 420, T_LIFT = 180, ENTRY = -1780;
   var pals = [], total = 3, curT = 0, playing = false, rafId = null, totalTime = 0, currentLoad = 3;
 
   /* 订单货量固定：480 件，件规 400×270×250（单件 0.027 m³），托数按托盘规格自动计算；
@@ -1127,12 +1127,12 @@
     pals = all.slice(0, limit);
     total = pals.length;
     gPallets.innerHTML = '';
-    var stagger = limit <= 4 ? 600 : 180;
+    var stagger = limit <= 4 ? 500 : 150;
     for (var i = 0; i < pals.length; i++) {
       pals[i].t0 = i * stagger;
       pals[i].g = makePallet(pals[i], i);
     }
-    totalTime = (total - 1) * stagger + T_IN + T_LIFT + 500;
+    totalTime = (total - 1) * stagger + T_IN + T_LIFT + 300;
     document.getElementById('tot').textContent = total;
     var perLayer = layout.cols * layout.rows;
     var layUsed = Math.max(1, Math.ceil(total / perLayer));
