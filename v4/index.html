@@ -1013,7 +1013,7 @@
     gPallets = el('g', {}, scene);
     var gRoof = el('g', {}, scene);
     gDims = el('g', {}, scene);
-    pline(gDims, P(1220, 8, -1560), P(1220, 8, -210), '#c21f2e', 2.6, { 'stroke-dasharray': '10 8', 'marker-end': 'url(#arrow)', opacity: .9 });
+    pline(gWalls, P(3350, 8, 4200), P(2480, 8, 4200), '#c21f2e', 2.6, { 'stroke-dasharray': '10 8', 'marker-end': 'url(#arrow)', opacity: .9 });
 
     poly(gWalls, [P(0, 0, 0), P(INNER.W, 0, 0), P(INNER.W, 0, INNER.L), P(0, 0, INNER.L)], 'url(#floorGrad)', { stroke: '#cdd8e4', 'stroke-width': 1.4 });
     for (var x = 40; x < INNER.W; x += 108) pline(gWalls, P(x, 1, 0), P(x, 1, INNER.L), '#cbd6e2', 0.9, { opacity: .8 });
@@ -1032,17 +1032,17 @@
     /* 近侧墙同样式半透明覆盖，托盘右侧面透过侧墙可见 */
     poly(gRoof, [P(INNER.W, 0, 0), P(INNER.W, 0, INNER.L), P(INNER.W, INNER.H, INNER.L), P(INNER.W, INNER.H, 0)], '#dfe9f3', { 'fill-opacity': .3, stroke: '#aebfd1', 'stroke-width': 1.8 });
 
-    poly(gWalls, [P(0, 0, 0), P(INNER.W, 0, 0), P(INNER.W, 0, -70), P(0, 0, -70)], '#cfd9e4', { stroke: '#b8c5d3', 'stroke-width': 1.2 });
-    el('polyline', { points: pts([P(0, 0, 0), P(0, INNER.H, 0), P(INNER.W, INNER.H, 0), P(INNER.W, 0, 0)]), fill: 'none', stroke: '#8e9eb0', 'stroke-width': 4, 'stroke-linejoin': 'round' }, gWalls);
-    [[-40, .55], [INNER.W + 40, .42]].forEach(function (d) {
-      poly(gWalls, [P(d[0], 40, 0), P(d[0], 40, -820), P(d[0], 2440, -820), P(d[0], 2440, 0)], 'none', { opacity: d[1], stroke: '#9fb0c3', 'stroke-width': 2, 'stroke-dasharray': '16 10' });
+    /* 侧门开口（右侧面 x=INNER.W）：门外地面延伸条 + 门洞框 + 两扇对开滑门虚线 + 地面警示条 */
+    poly(gWalls, [P(INNER.W, 0, 500), P(INNER.W, 0, 7000), P(INNER.W + 70, 0, 7000), P(INNER.W + 70, 0, 500)], '#cfd9e4', { stroke: '#b8c5d3', 'stroke-width': 1.2 });
+    el('polyline', { points: pts([P(INNER.W, 0, 500), P(INNER.W, INNER.H, 500), P(INNER.W, INNER.H, 7000), P(INNER.W, 0, 7000)]), fill: 'none', stroke: '#8e9eb0', 'stroke-width': 4, 'stroke-linejoin': 'round' }, gWalls);
+    [[500, 3750, .55], [3750, 7000, .42]].forEach(function (d) {
+      poly(gWalls, [P(INNER.W, 40, d[0]), P(INNER.W, 40, d[1]), P(INNER.W, 2440, d[1]), P(INNER.W, 2440, d[0])], 'none', { opacity: d[2], stroke: '#7f95ad', 'stroke-width': 2.4, 'stroke-dasharray': '14 9' });
     });
-    poly(gWalls, [P(0, 40, 0), P(INNER.W, 40, 0), P(INNER.W, 40, -60), P(0, 40, -60)], '#e9eef4', { stroke: '#c6d1dd', 'stroke-width': 1 });
-    for (var s0 = 0; s0 < INNER.W; s0 += 400) {
-      poly(gWalls, [P(s0, 41, 0), P(s0 + 200, 41, 0), P(s0 + 200, 41, -58), P(s0, 41, -58)], '#c21f2e', { opacity: .75 });
+    for (var s0 = 500; s0 < 7000; s0 += 400) {
+      poly(gWalls, [P(INNER.W, 41, s0), P(INNER.W, 41, s0 + 200), P(INNER.W + 58, 41, s0 + 200), P(INNER.W + 58, 41, s0)], '#c21f2e', { opacity: .75 });
     }
-    poly(gWalls, [P(0, 1780, 0), P(300, 1780, 0), P(300, 2470, 0), P(0, 2470, 0)], '#9fae86', { opacity: .32 });
-    poly(gWalls, [P(INNER.W - 300, 1780, 0), P(INNER.W, 1780, 0), P(INNER.W, 2470, 0), P(INNER.W - 300, 2470, 0)], '#9fae86', { opacity: .32 });
+    /* 后端封闭面板（改为侧装后后门不再开启） */
+    poly(gWalls, [P(0, 0, 0), P(INNER.W, 0, 0), P(INNER.W, INNER.H, 0), P(0, INNER.H, 0)], '#eef3f8', { opacity: .96, stroke: '#c8d4e1', 'stroke-width': 1.4 });
   }
 
   var CARTONS = [
